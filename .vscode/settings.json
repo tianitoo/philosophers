@@ -1,0 +1,7 @@
+{
+	"files.associations": {
+		"philo.h": "c",
+		"locale": "c",
+		"time.h": "c"
+	}
+}
