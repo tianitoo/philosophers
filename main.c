@@ -19,14 +19,17 @@ int	prompt_error(char *str)
 	return (1);
 }
 
-void	ft_usleep(long sleep)
+void	ft_usleep(int sleep)
 {
-	long	time_to_wake_up;
+	int	time_to_wake_up;
 
 	time_to_wake_up = get_time() + sleep;
+	// pthread_mutex_lock(philo->output);
+	// ft_printf("id = %d, time to wake up = %d\n", philo->id, time_to_wake_up - philo->start_time);
+	// pthread_mutex_unlock(philo->output);
 	while (get_time() < time_to_wake_up)
 	{
-		usleep(10000);
+		usleep(1);
 	}
 }
 
@@ -52,10 +55,23 @@ int	check_args(int argc, char **argv)
 
 t_philo	*init_data(int argc, char **argv,  pthread_mutex_t *output)
 {
-		t_philo	*philo;
+	t_philo	*philo;
 	t_philo	*tmp;
 	int		i;
+	int		philo_count;
+	int		time_to_die;
+	int		time_to_eat;
+	int		time_to_sleep;
+	int		must_eat_count;
 
+	philo_count = ft_atoi(argv[1]);
+	time_to_die = ft_atoi(argv[2]);
+	time_to_eat = ft_atoi(argv[3]);
+	time_to_sleep = ft_atoi(argv[4]);
+	if (argc == 6)
+		must_eat_count = ft_atoi(argv[5]);
+	else
+		must_eat_count = -1;
 	i = 0;
 	philo = NULL;
 	while (i < ft_atoi(argv[1]))
@@ -70,13 +86,13 @@ t_philo	*init_data(int argc, char **argv,  pthread_mutex_t *output)
 		tmp->is_thinking = 0;
 		tmp->is_dead = 0;
 		tmp->is_full = 0;
-		tmp->philo_count = ft_atoi(argv[1]);
-		tmp->time_to_die = ft_atoi(argv[2]);
-		tmp->time_to_eat = ft_atoi(argv[3]);
-		tmp->time_to_sleep = ft_atoi(argv[4]);
-		tmp->must_eat_count = (argc == 6) ? ft_atoi(argv[5]) : -1;
 		tmp->start_time = get_time();
 		tmp->last_eat = tmp->start_time;
+		tmp->philo_count = philo_count;
+		tmp->time_to_die = time_to_die;
+		tmp->time_to_eat = time_to_eat;
+		tmp->time_to_sleep = time_to_sleep;
+		tmp->must_eat_count = must_eat_count;
 		tmp->output = output;
 		tmp->next = NULL;
 		if (!philo)
@@ -92,11 +108,37 @@ t_philo	*init_data(int argc, char **argv,  pthread_mutex_t *output)
 void	*check_death(void *arg)
 {
 	t_philo	*philo;
+	int is_eating;
+	int is_sleeping;
 
 	philo = (t_philo *)arg;
+	is_eating = 0;
+	is_sleeping = 0;
 	while (1)
 	{
-		
+		if (is_eating != philo->is_eating && philo->is_eating)
+		{
+			is_eating = 1;
+			pthread_mutex_lock(philo->output);
+			ft_printf("%d %d has taken a fork\n", philo->last_eat - philo->start_time, philo->id);
+			ft_printf("%d %d has taken a fork\n", philo->last_eat - philo->start_time, philo->id);
+			ft_printf("%d %d is eating\n", philo->last_eat - philo->start_time, philo->id);
+			pthread_mutex_unlock(philo->output);
+		} else if (is_eating != philo->is_eating && !philo->is_eating)
+			is_eating = 0;
+		if (is_sleeping != philo->is_sleeping && philo->is_sleeping)
+		{
+			is_sleeping = 1;
+			pthread_mutex_lock(philo->output);
+			ft_printf("%d %d is sleeping\n", get_time() - philo->start_time, philo->id);
+			pthread_mutex_unlock(philo->output);
+		} else if (is_sleeping != philo->is_sleeping && !philo->is_sleeping)
+		{
+			is_sleeping = 0;
+			pthread_mutex_lock(philo->output);
+			ft_printf("%d %d is thinking\n", get_time() - philo->start_time, philo->id);
+			pthread_mutex_unlock(philo->output);
+		}
 		if (philo->must_eat_count != -1
 			&& philo->eat_count == philo->must_eat_count)
 		{
@@ -105,9 +147,9 @@ void	*check_death(void *arg)
 		}
 		if (get_time() - philo->last_eat > philo->time_to_die)
 		{
-			philo->is_dead = 1;
 			pthread_mutex_lock(philo->output);
 			ft_printf("%d %d died\n", get_time() - philo->start_time, philo->id);
+			philo->is_dead = 1;
 			return (NULL);
 		}
 	}
@@ -117,10 +159,12 @@ int	main(int argc, char **argv)
 {
 	t_philo			*philo;
 	pthread_mutex_t	output;
+	int				philo_count;
 	int				i;
 
 	i = 0;
 	philo = NULL;
+	philo_count = ft_atoi(argv[1]);
 	pthread_mutex_init(&output, NULL);
 	if (argc < 5 || argc > 6)
 		return (prompt_error("Error: wrong number of arguments"));
@@ -129,7 +173,7 @@ int	main(int argc, char **argv)
 	philo = init_data(argc, argv, &output);
 	if (!philo)
 		return (prompt_error("Error: malloc failed"));
-	while (i < ft_atoi(argv[1]))
+	while (i < philo_count)
 	{
 		pthread_create(&philo->thread, NULL, philosoph, philo);
 		pthread_create(&philo->death, NULL, check_death, philo);

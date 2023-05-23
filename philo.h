@@ -52,11 +52,11 @@ void	print_status(t_philo *philo, char *str);
 void	start_eating(t_philo *philo);
 void	start_thinking(t_philo *philo);
 int		prompt_error(char *str);
-void	ft_usleep(long sleep);
 void	start_sleeping(t_philo *philo);
 void	is_dead(t_philo *philo);
 t_philo	*get_last_philo(t_philo *philo);
 void	*philosoph(void *arg);
+void	ft_usleep(int sleep);
 int	check_args(int argc, char **argv);
 
 #endif

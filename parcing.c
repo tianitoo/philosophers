@@ -39,49 +39,33 @@ void	*philosoph(void *arg)
 	t_philo	*philo;
 
 	philo = (t_philo *)arg;
-	if (philo->id % 2)
-		ft_usleep(philo->time_to_eat / 2);
+	// if (philo->id % 2)
+	// 	ft_usleep(10);
 	while (1)
 	{
-		start_eating(philo);
-		start_sleeping(philo);
-		start_thinking(philo);
+		pthread_mutex_lock(&philo->fork);
+		pthread_mutex_lock(&philo->next->fork);
+		philo->last_eat = get_time();
+		philo->eat_count++;
+		// pthread_mutex_lock(philo->output);
+		// ft_printf("%d %d has taken a fork\n", philo->last_eat - philo->start_time, philo->id);
+		// ft_printf("%d %d has taken a fork\n", philo->last_eat - philo->start_time, philo->id);
+		// ft_printf("%d %d is eating\n", philo->last_eat - philo->start_time, philo->id);
+		// pthread_mutex_unlock(philo->output);
+		philo->is_eating = 1;
+		ft_usleep(philo->time_to_eat);
+		philo->is_eating = 0;
+		pthread_mutex_unlock(&philo->fork);
+		pthread_mutex_unlock(&philo->next->fork);
+		// pthread_mutex_lock(philo->output);
+		// ft_printf("%d %d is sleeping\n", get_time() - philo->start_time, philo->id);
+		// pthread_mutex_unlock(philo->output);
+		philo->is_sleeping = 1;
+		ft_usleep(philo->time_to_sleep);
+		philo->is_sleeping = 0;
+		// pthread_mutex_lock(philo->output);
+		// ft_printf("%d %d is thinking\n", get_time() - philo->start_time, philo->id);
+		// pthread_mutex_unlock(philo->output);
 	}
 	return (NULL);
-}
-
-void	start_eating(t_philo *philo)
-{
-	pthread_mutex_lock(&philo->fork);
-	pthread_mutex_lock(&philo->next->fork);
-	pthread_mutex_lock(philo->output);
-	ft_printf("%d %d has taken a fork\n", get_time()
-		- philo->start_time, philo->id);
-	ft_printf("%d %d has taken a fork\n", get_time()
-		- philo->start_time, philo->id);
-	ft_printf("%d %d is eating\n", get_time()
-		- philo->start_time, philo->id);
-	pthread_mutex_unlock(philo->output);
-	philo->last_eat = get_time();
-	philo->eat_count++;
-	ft_usleep(philo->time_to_eat);
-	pthread_mutex_unlock(&philo->fork);
-	pthread_mutex_unlock(&philo->next->fork);git 
-}
-
-void	start_sleeping(t_philo *philo)
-{
-	pthread_mutex_lock(philo->output);
-	ft_printf("%d %d is sleeping\n", get_time()
-		- philo->start_time, philo->id);
-	pthread_mutex_unlock(philo->output);
-	ft_usleep(philo->time_to_sleep);
-}
-
-void	start_thinking(t_philo *philo)
-{
-	pthread_mutex_lock(philo->output);
-	ft_printf("%d %d is thinking\n", get_time()
-		- philo->start_time, philo->id);
-	pthread_mutex_unlock(philo->output);
 }
