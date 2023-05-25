@@ -1,6 +1,6 @@
 NAME = philo
 CC = cc 
-FLAGS = -Wall -Werror -Wextra
+FLAGS = -Wall -Werror -Wextra #-fsanitize=thread 
 AR = ar -r
 RM = rm -f
 HEAD = philo.h

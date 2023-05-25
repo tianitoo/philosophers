@@ -6,7 +6,7 @@
 /*   By: hnait <hnait@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/18 14:41:34 by hnait             #+#    #+#             */
-/*   Updated: 2023/05/23 12:10:19 by hnait            ###   ########.fr       */
+/*   Updated: 2023/05/25 22:03:24 by hnait            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,8 @@
 typedef struct s_philo
 {
 	pthread_t		thread;
-	pthread_t		death;
 	int				id;
 	int				eat_count;
-	int				is_eating;
-	int				is_sleeping;
-	int				is_thinking;
 	long			last_eat;
 	int				is_dead;
 	int				is_full;
@@ -46,17 +42,20 @@ typedef struct s_philo
 
 
 t_philo	*init_data(int argc, char **argv, pthread_mutex_t *output);
+void	free_all(t_philo *philo);
 int		get_time(void);
 void	is_dead(t_philo *philo);
-void	print_status(t_philo *philo, char *str);
 void	start_eating(t_philo *philo);
 void	start_thinking(t_philo *philo);
 int		prompt_error(char *str);
 void	start_sleeping(t_philo *philo);
 void	is_dead(t_philo *philo);
 t_philo	*get_last_philo(t_philo *philo);
+void	stop_all_philo(t_philo *philo);
 void	*philosoph(void *arg);
 void	ft_usleep(int sleep);
 int	check_args(int argc, char **argv);
+int	check_philo_died(t_philo *philo);
+
 
 #endif
