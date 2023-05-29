@@ -22,7 +22,10 @@ void	ft_putstr(char *s, int *printed)
 		ft_putstr("(null)", printed);
 	}
 	else
+	{
 		while (s[i] && *printed != -1)
+		{
 			ft_putchar(s[i++], printed);
+		}
+	}
 }
- 

@@ -1,25 +1,20 @@
 /* ************************************************************************** */
 /*																			*/
 /*														:::	  ::::::::   */
-/*   ft_lstiter.c									   :+:	  :+:	:+:   */
+/*   ft_isdigit.c									   :+:	  :+:	:+:   */
 /*													+:+ +:+		 +:+	 */
 /*   By: hnait <hnait@student.42.fr>				+#+  +:+	   +#+		*/
 /*												+#+#+#+#+#+   +#+		   */
-/*   Created: 2022/10/24 10:57:15 by hnait 	   		   #+#	#+#			 */
+/*   Created: 2022/10/06 02:08:34 by hnait 	   		   #+#	#+#			 */
 /*   Updated: 2023/03/14 17:38:58 by hnait			###   ########.fr	   */
 /*																			*/
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "philo.h"
 
-void	ft_lstiter(t_list *lst, void (*f)(void *))
+int	ft_isdigit(int c)
 {
-	if (f)
-	{
-		while (lst)
-		{
-			f(lst->content);
-			lst = lst->next;
-		}
-	}
+	if (c >= '0' && c <= '9')
+		return (1);
+	return (0);
 }
