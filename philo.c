@@ -6,7 +6,7 @@
 /*   By: hnait <hnait@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 16:54:25 by hnait             #+#    #+#             */
-/*   Updated: 2023/05/29 20:07:19 by hnait            ###   ########.fr       */
+/*   Updated: 2023/06/03 20:14:32 by hnait            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,9 +42,9 @@ void	*check_death_full(void *arg)
 	while (1)
 	{
 		if (check_philo_died(philo))
-			return (NULL);
+			break ;
 		if (check_all_philo_full(philo) && philo->must_eat_count != -1)
-			return (NULL);
+			break ;
 	}
 	free_all(philo);
 	return (NULL);
