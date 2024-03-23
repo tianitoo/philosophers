@@ -6,7 +6,7 @@
 /*   By: hnait <hnait@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 16:51:55 by hnait             #+#    #+#             */
-/*   Updated: 2023/05/26 16:56:33 by hnait            ###   ########.fr       */
+/*   Updated: 2023/06/08 15:57:53 by hnait            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,13 +39,6 @@ t_philo	*get_last_philo(t_philo *philo)
 	while (philo->next)
 		philo = philo->next;
 	return (philo);
-}
-
-int	prompt_error(char *str)
-{
-	dup2(2, 1);
-	ft_printf("%s\n", str);
-	return (1);
 }
 
 t_philo	*get_precedent_philo(t_philo *philo)
